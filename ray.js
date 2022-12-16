@@ -1,9 +1,10 @@
 class Ray {
-  constructor(x, y) {
-    this.pos = createVector(x, y); // position
-    this.dir = createVector(1, 0); // direction
+  constructor(pos, angle) {
+    this.pos = pos; // from input position
+    this.dir = p5.Vector.fromAngle(angle); // direction
   }
 
+  // create a vector pointing towards particular point
   lookAt(x, y) {
     this.dir.x = x - this.pos.x;
     this.dir.y = y - this.pos.y;
@@ -29,6 +30,8 @@ class Ray {
     const x4 = this.pos.x + this.dir.x;
     const y4 = this.pos.y + this.dir.y;
 
+    // Line-Line Intersection Algorithm
+    // find the intersection point and save it in pt
     const den = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
     if (den == 0) {
       return;
