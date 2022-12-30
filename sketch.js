@@ -44,8 +44,10 @@ function draw() {
   for (let i = 0; i < scene.length; i++) {
     noStroke();
     const b = map(scene[i], 0, sceneW, 255, 0);
+    const h = map(scene[i], 0, sceneW, sceneH, 0);
     fill(b);
-    rect(i * w, 0, w, height);
+    rectMode(CENTER);
+    rect(i * w + w / 2, sceneH / 2, w, h);
   }
   pop();
 }
