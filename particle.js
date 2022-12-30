@@ -1,6 +1,6 @@
 class Particle {
   constructor() {
-    this.pos = createVector(width / 2, height / 2); // original position (center)
+    this.pos = createVector(width / 4, height / 2); // original position (center)
     this.rays = [];
     this.heading = 0;
     for (let a = -this.fov / 2; a < this.fov / 2; a += 1) {
@@ -29,10 +29,14 @@ class Particle {
     }
   }
 
-  move(amt) {
-    const vel = p5.Vector.fromAngle(this.heading);
-    vel.setMag(amt);
-    this.pos.add(vel);
+  move(dx, dy) {
+    // Calculate the new position of the particle based on the grid coordinates
+    const newPos = createVector(this.pos.x + dx * gridSize, this.pos.y + dy * gridSize);
+    // Check if the new position is within the boundaries of the grid
+    if (newPos.x >= 0 && newPos.x <= sceneW && newPos.y >= 0 && newPos.y <= sceneH) {
+      // Update the particle's position
+      this.pos = newPos;
+    }
   }
 
   look(walls) {
@@ -49,7 +53,7 @@ class Particle {
           let d = p5.Vector.dist(this.pos, pt);
           const a = ray.dir.heading() - this.heading;
           // if (!mouseIsPressed) {
-            d *= cos(a);
+          d *= cos(a);
           // }
           if (d < record) {
             record = d;
