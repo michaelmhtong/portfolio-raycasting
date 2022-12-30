@@ -1,22 +1,21 @@
 let walls = [];
 let ray;
 let particle;
+let start;
+let end;
+let sliderFOV;
 
 const sceneW = 400;
 const sceneH = 400;
-let sliderFOV;
 
 function setup() {
   // setup the space
   createCanvas(800, 400);
-  // Boundary random lines
-  for (let i = 0; i < 5; i++) {
-    let x1 = random(sceneW);
-    let x2 = random(sceneW);
-    let y1 = random(sceneH);
-    let y2 = random(sceneH);
-    walls[i] = new Boundary(x1, y1, x2, y2);
-  }
+  // initialize empty array to store the lines
+  walls = [];
+  // set up the canvas to listen for mouse clicks
+  canvas.addEventListener("mousedown", startLine);
+  canvas.addEventListener("mouseup", endLine);
   // Boundary borders
   walls.push(new Boundary(0, 0, sceneW, 0));
   walls.push(new Boundary(sceneW, 0, sceneW, sceneH));
@@ -25,6 +24,20 @@ function setup() {
   particle = new Particle();
   sliderFOV = createSlider(0, 360, 60);
   sliderFOV.input(changeFOV);
+}
+
+
+function startLine() {
+  start = createVector(mouseX, mouseY);
+}
+
+function endLine() {
+  end = createVector(mouseX, mouseY);
+  // create a new boundary object based on the start and end positions
+  walls.push(new Boundary(start.x, start.y, end.x, end.y));
+  // reset start and end positions
+  start = null;
+  end = null;
 }
 
 function changeFOV() {
@@ -50,6 +63,11 @@ function draw() {
     wall.show();
   }
   particle.show();
+
+  if (start && end) {
+    stroke(255);
+    line(start.x, start.y, end.x, end.y);
+  }
 
   const scene = particle.look(walls);
   const w = sceneW / scene.length; // width based on the length
