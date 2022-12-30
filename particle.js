@@ -3,7 +3,7 @@ class Particle {
     this.pos = createVector(width / 2, height / 2); // original position (center)
     this.rays = [];
     this.heading = 0;
-    for (let a = -30; a < 30; a += 1) {
+    for (let a = -this.fov / 2; a < this.fov / 2; a += 1) {
       this.rays.push(new Ray(this.pos, radians(a))); // make a ray every "a" radian
     }
   }
@@ -12,10 +12,18 @@ class Particle {
     this.pos.set(x, y);
   }
 
+  updateFOV(fov) {
+    this.fov = fov;
+    this.rays = [];
+    for (let a = -this.fov / 2; a < this.fov / 2; a += 1) {
+      this.rays.push(new Ray(this.pos, radians(a) + this.heading));
+    }
+  }
+
   rotate(angle) {
     this.heading += angle;
     let index = 0;
-    for (let a = -30; a < 30; a += 1) {
+    for (let a = -this.fov / 2; a < this.fov / 2; a += 1) {
       this.rays[index].setAngle(radians(a) + this.heading);
       index++;
     }
@@ -38,7 +46,11 @@ class Particle {
         const pt = ray.cast(wall);
         if (pt) {
           // d is distance, record is the shortest distance
-          const d = p5.Vector.dist(this.pos, pt);
+          let d = p5.Vector.dist(this.pos, pt);
+          const a = ray.dir.heading() - this.heading;
+          // if (!mouseIsPressed) {
+            d *= cos(a);
+          // }
           if (d < record) {
             record = d;
             closest = pt;

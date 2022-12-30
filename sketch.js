@@ -4,11 +4,11 @@ let particle;
 
 const sceneW = 400;
 const sceneH = 400;
+let sliderFOV;
 
 function setup() {
   // setup the space
   createCanvas(800, 400);
-
   // Boundary random lines
   for (let i = 0; i < 5; i++) {
     let x1 = random(sceneW);
@@ -17,36 +17,38 @@ function setup() {
     let y2 = random(sceneH);
     walls[i] = new Boundary(x1, y1, x2, y2);
   }
-
   // Boundary borders
-  walls.push(new Boundary(-1, -1, sceneW, -1));
-  walls.push(new Boundary(sceneW, -1, sceneW, sceneH));
-  walls.push(new Boundary(sceneW, height, -1, sceneH));
-  walls.push(new Boundary(-1, height, -1, -1));
+  walls.push(new Boundary(0, 0, sceneW, 0));
+  walls.push(new Boundary(sceneW, 0, sceneW, sceneH));
+  walls.push(new Boundary(sceneW, sceneH, 0, sceneH));
+  walls.push(new Boundary(0, sceneH, 0, 0));
   particle = new Particle();
+  sliderFOV = createSlider(0, 360, 60);
+  sliderFOV.input(changeFOV);
 }
 
-function keyPressed() {
-  if (keyIsDown(LEFT_ARROW)) {
-    particle.rotate(0.1);
-  } else if (keyIsDown(RIGHT_ARROW)) {
-    particle.rotate(-0.1);
-  } else if (keyIsDown(UP_ARROW)) {
-    particle.move(10);
-  } else if (keyIsDown(DOWN_ARROW)) {
-    particle.move(-10);
-  }
+function changeFOV() {
+  const fov = sliderFOV.value();
+  particle.updateFOV(fov);
 }
 
 function draw() {
+  if (keyIsDown(LEFT_ARROW)) {
+    particle.rotate(-0.05);
+  } else if (keyIsDown(RIGHT_ARROW)) {
+    particle.rotate(0.05);
+  } else if (keyIsDown(UP_ARROW)) {
+    particle.move(2);
+  } else if (keyIsDown(DOWN_ARROW)) {
+    particle.move(-2);
+  }
+
   background(0);
 
   // loop through the array "walls" and show it
   for (let wall of walls) {
     wall.show();
   }
-
-  // particle.update(mouseX, mouseY); // particle update according the mouse position
   particle.show();
 
   const scene = particle.look(walls);
