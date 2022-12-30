@@ -26,6 +26,14 @@ function setup() {
   particle = new Particle();
 }
 
+function keyPressed() {
+  if (keyIsDown(LEFT_ARROW)) {
+    particle.rotate(0.1);
+  } else if (keyIsDown(RIGHT_ARROW)) {
+    particle.rotate(-0.1);
+  }
+}
+
 function draw() {
   background(0);
 

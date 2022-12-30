@@ -4,6 +4,10 @@ class Ray {
     this.dir = p5.Vector.fromAngle(angle); // direction
   }
 
+  setAngle(angle) {
+    this.dir = p5.Vector.fromAngle(angle);
+  }
+
   // create a vector pointing towards particular point
   lookAt(x, y) {
     this.dir.x = x - this.pos.x;

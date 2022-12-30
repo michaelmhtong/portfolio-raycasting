@@ -2,6 +2,7 @@ class Particle {
   constructor() {
     this.pos = createVector(width / 2, height / 2); // original position (center)
     this.rays = [];
+    this.heading = 0;
     for (let a = 0; a < 90; a += 1) {
       this.rays.push(new Ray(this.pos, radians(a))); // make a ray every "a" radian
     }
@@ -9,6 +10,13 @@ class Particle {
 
   update(x, y) {
     this.pos.set(x, y);
+  }
+
+  rotate(angle) {
+    this.heading += angle;
+    for (let i = 0; i < this.rays.length; i += 1) {
+      this.rays[i].setAngle(radians(i) + this.heading);
+    }
   }
 
   look(walls) {
