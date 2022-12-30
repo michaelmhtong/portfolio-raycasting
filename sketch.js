@@ -31,6 +31,10 @@ function keyPressed() {
     particle.rotate(0.1);
   } else if (keyIsDown(RIGHT_ARROW)) {
     particle.rotate(-0.1);
+  } else if (keyIsDown(UP_ARROW)) {
+    particle.move(10);
+  } else if (keyIsDown(DOWN_ARROW)) {
+    particle.move(-10);
   }
 }
 
@@ -42,7 +46,7 @@ function draw() {
     wall.show();
   }
 
-  particle.update(mouseX, mouseY); // particle update according the mouse position
+  // particle.update(mouseX, mouseY); // particle update according the mouse position
   particle.show();
 
   const scene = particle.look(walls);
@@ -51,11 +55,13 @@ function draw() {
   translate(sceneW, 0);
   for (let i = 0; i < scene.length; i++) {
     noStroke();
-    const b = map(scene[i], 0, sceneW, 255, 0);
+    const sq = scene[i] * scene[i];
+    const wSq = sceneW * sceneW;
+    const b = map(sq, 0, wSq, 255, 0);
     const h = map(scene[i], 0, sceneW, sceneH, 0);
     fill(b);
     rectMode(CENTER);
-    rect(i * w + w / 2, sceneH / 2, w, h);
+    rect(i * w + w / 2, sceneH / 2, w + 1, h);
   }
   pop();
 }
