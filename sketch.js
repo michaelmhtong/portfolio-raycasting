@@ -56,7 +56,6 @@ function changeFOV() {
   particle.updateFOV(fov);
 }
 
-
 function keyPressed() {
   if (keyIsDown(LEFT_ARROW)) {
     // move the particle left
@@ -70,13 +69,18 @@ function keyPressed() {
   } else if (keyIsDown(DOWN_ARROW)) {
     // move the particle down
     particle.move(0, 1);
+  } else if (key === "q") {
+    // Rotate the particle 90 degrees counterclockwise
+    particle.rotate(-PI / 2);
+  } else if (key === "e") {
+    // Rotate the particle 90 degrees clockwise
+    particle.rotate(PI / 2);
   }
 }
 
 function draw() {
-
   background(0);
-  
+
   stroke(255);
   for (let x = 0; x < sceneW; x += gridSize) {
     line(x, 0, x, sceneH);
@@ -93,11 +97,29 @@ function draw() {
   }
   particle.show();
 
+  // check if the user is currently drawing a line
+  if (start) {
+    // Calculate the column and row of the grid based on the mouse position
+    const col = floor(mouseX / gridSize);
+    const row = floor(mouseY / gridSize);
+    // Calculate the end position based on the grid column and row
+    end = createVector(col * gridSize, row * gridSize);
+    // draw a line from the start position to the end position
+    stroke(255);
+    line(start.x, start.y, end.x, end.y);
+  }
 
   if (start && end) {
     stroke(255);
     line(start.x, start.y, end.x, end.y);
   }
+
+  // // Calculate the angle between the particle's position and the mouse position
+  // const angle = atan2(mouseY - particle.pos.y, mouseX - particle.pos.x);
+  // // Calculate the difference between the current heading and the target angle
+  // const angleDiff = angle - particle.heading;
+  // // Rotate the particle by the clamped angle
+  // particle.rotate(angleDiff);
 
   const scene = particle.look(walls);
   const w = sceneW / scene.length; // width based on the length
